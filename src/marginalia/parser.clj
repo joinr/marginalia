@@ -411,7 +411,9 @@
 (defn parse-file [fn]
   (with-readers-for fn
     (binding [*comments-enabled* (atom true)]
-      (parse (slurp fn)))))
+      (try (parse (slurp fn))
+           (catch Exception e
+             (throw (Exception. (str [:parsing-failed! :filed fn :ex e]))))))))
 
 (defn parse-ns [file]
   (let [filename (.getName file)]
